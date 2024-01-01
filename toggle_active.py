@@ -3,6 +3,19 @@ import sys
 from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QLabel, QVBoxLayout, QHBoxLayout, QPushButton
 from PyQt6.QtCore import Qt
 cwd = os.getcwd()
+def getDisplayName(file):
+    if "physics" in file:
+        return "Winter Mod - Physics"
+    elif "clean" in file:
+        return "Winter Mod - Clean Roads"
+    elif "wheel" in file:
+        return "Winter Mod - Frosty Wheels"
+    elif "frosty_ats_" in file:
+        return "Winter Mod"
+    else:
+        display_name = file.replace("INACTIVE_", "")
+        display_name = display_name.replace(".scs", "")
+        return display_name
 def getCurrentFile(file):
     if "physics" in file:
         for file in os.listdir(cwd):
@@ -61,7 +74,7 @@ def main():
         w.setWindowTitle("Toggle Active")
         for index, file in enumerate(os.listdir(cwd)):
             if file.endswith(".scs"):
-                display_name = file.replace("INACTIVE_", "")
+                display_name = getDisplayName(file.replace("INACTIVE_", ""))
                 widget = QCheckBox()
                 widget.setCheckState(getCheckedState(file))
                 widget.stateChanged.connect(lambda state, file=getCurrentFile(file): updateFileState(getCurrentFile(file), state))
