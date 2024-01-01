@@ -33,9 +33,11 @@ def getCurrentFile(file):
         for file in os.listdir(cwd):
             if "frosty_ats_" in file:
                 return file
+            
 def enableAll(vault_of_checkboxes):
     for checkbox in vault_of_checkboxes:
         checkbox.setCheckState(Qt.CheckState.Checked)
+        checkbox.setEnabled(True)
     for file in os.listdir(cwd):
         if file.startswith("INACTIVE_"):
             os.rename(file, file.replace("INACTIVE_", ""))
@@ -53,16 +55,25 @@ def getCheckedState(file):
         return Qt.CheckState.Unchecked
     else:
         return Qt.CheckState.Checked
-def updateFileState(file, state):
-    full_path = os.path.join(cwd, file)
+def updateFileState(file, state, vault_of_checkboxes):
     if state == 2:
+        if "frosty_ats_v" in file:
+            for index, checkbox in enumerate(vault_of_checkboxes):
+                if index > 0:
+                    checkbox.setEnabled(True)
         new_file = file.replace("INACTIVE_", "")
         os.rename(file, new_file)
         file = new_file
     if state == 0:
-        new_file = "INACTIVE_" + file
-        os.rename(file, "INACTIVE_" + file)
-        file = new_file
+        if "frosty_ats_v" in file:
+            disableAll(vault_of_checkboxes)
+            for index, checkbox in enumerate(vault_of_checkboxes):
+                if index > 0: #this is really janky and assumes that the main file is the first one in the list
+                    checkbox.setEnabled(False)
+        else:
+            new_file = "INACTIVE_" + file
+            os.rename(file, "INACTIVE_" + file)
+            file = new_file
 def main():
     while True:
         vault_of_checkboxes = []
@@ -77,7 +88,7 @@ def main():
                 display_name = getDisplayName(file.replace("INACTIVE_", ""))
                 widget = QCheckBox()
                 widget.setCheckState(getCheckedState(file))
-                widget.stateChanged.connect(lambda state, file=getCurrentFile(file): updateFileState(getCurrentFile(file), state))
+                widget.stateChanged.connect(lambda state, file=getCurrentFile(file): updateFileState(getCurrentFile(file), state, vault_of_checkboxes))
                 vault_of_checkboxes.append(widget)
                 label = QLabel(display_name)
                 vbox = QHBoxLayout()
