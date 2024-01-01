@@ -83,57 +83,5 @@ def main():
         w.show()
         sys.exit(app.exec())
 
-# Get the current working directory
-
 if __name__ == "__main__":
     main()
-'''
-
-cwd = os.getcwd()
-if len(sys.argv) == 1:
-    for file in os.listdir(cwd):
-        if not file.endswith(".py") and not file.endswith(".exe"):
-            if file.startswith("INACTIVE_"):
-                os.rename(file, file.replace("INACTIVE_", ""))
-            else:
-                os.rename(file, "INACTIVE_" + file)
-else:
-    for arg in sys.argv[1:]:
-        if arg == "--active":
-            for file in os.listdir(cwd):
-                if file.startswith("INACTIVE_"):
-                    os.rename(file, file.replace("INACTIVE_", ""))
-        if arg == "--inactive":
-            for file in os.listdir(cwd):
-                if not file.endswith(".py") and not file.endswith(".exe"):
-                    if not file.startswith("INACTIVE_"):
-                        os.rename(file, "INACTIVE_" + file)    
-        if arg == "--physics":
-            for file in os.listdir(cwd):
-                if "physics" in file:
-                    if file.startswith("INACTIVE_"):
-                        os.rename(file, file.replace("INACTIVE_", ""))
-                    else:
-                        os.rename(file, "INACTIVE_" + file)
-        if arg == "--clean":
-            for file in os.listdir(cwd):
-                if "clean" in file:
-                    if file.startswith("INACTIVE_"):
-                        os.rename(file, file.replace("INACTIVE_", ""))
-                    else:
-                        os.rename(file, "INACTIVE_" + file)
-        if arg == "--wheel":
-            for file in os.listdir(cwd):
-                if "wheel" in file:
-                    if file.startswith("INACTIVE_"):
-                        os.rename(file, file.replace("INACTIVE_", ""))
-                    else:
-                        os.rename(file, "INACTIVE_" + file)
-        if arg == "--main":
-            for file in os.listdir(cwd):
-                if "frosty_ats_" in file:
-                    if file.startswith("INACTIVE_"):
-                        os.rename(file, file.replace("INACTIVE_", ""))
-                    else:
-                        os.rename(file, "INACTIVE_" + file)
-'''
