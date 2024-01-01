@@ -1,6 +1,6 @@
 import os
 import sys
-from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QGridLayout, QLabel, QVBoxLayout, QHBoxLayout
+from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QLabel, QVBoxLayout, QHBoxLayout, QPushButton
 from PyQt6.QtCore import Qt
 cwd = os.getcwd()
 def getCurrentFile(file):
@@ -20,6 +20,21 @@ def getCurrentFile(file):
         for file in os.listdir(cwd):
             if "frosty_ats_" in file:
                 return file
+def enableAll(vault_of_checkboxes):
+    for checkbox in vault_of_checkboxes:
+        checkbox.setCheckState(Qt.CheckState.Checked)
+    for file in os.listdir(cwd):
+        if file.startswith("INACTIVE_"):
+            os.rename(file, file.replace("INACTIVE_", ""))
+
+def disableAll(vault_of_checkboxes):
+    for checkbox in vault_of_checkboxes:
+        checkbox.setCheckState(Qt.CheckState.Unchecked)
+    for file in os.listdir(cwd):
+        if not file.endswith(".py") and not file.endswith(".exe"):
+            if not file.startswith("INACTIVE_"):
+                os.rename(file, "INACTIVE_" + file)
+
 def getCheckedState(file):
     if file.startswith("INACTIVE_"):
         return Qt.CheckState.Unchecked
@@ -39,6 +54,7 @@ def updateFileState(file, state):
         file = new_file
 def main():
     while True:
+        vault_of_checkboxes = []
         app = QApplication(sys.argv)
         layout = QVBoxLayout()
         w = QWidget()
@@ -51,11 +67,20 @@ def main():
                 widget = QCheckBox()
                 widget.setCheckState(getCheckedState(file))
                 widget.stateChanged.connect(lambda state, file=getCurrentFile(file): updateFileState(getCurrentFile(file), state))
+                vault_of_checkboxes.append(widget)
                 label = QLabel(display_name)
                 vbox = QHBoxLayout()
                 vbox.addWidget(widget)
                 vbox.addWidget(label)
                 layout.addLayout(vbox)
+        button_vbox = QVBoxLayout()
+        quick_enable_btn = QPushButton("Enable All")
+        quick_enable_btn.clicked.connect(lambda: enableAll(vault_of_checkboxes))
+        quick_disable_btn = QPushButton("Disable All")
+        quick_disable_btn.clicked.connect(lambda: disableAll(vault_of_checkboxes))
+        button_vbox.addWidget(quick_enable_btn)
+        button_vbox.addWidget(quick_disable_btn)                
+        layout.addLayout(button_vbox)        
         w.setLayout(layout)
         w.show()
         sys.exit(app.exec())
