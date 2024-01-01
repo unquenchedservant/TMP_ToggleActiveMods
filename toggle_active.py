@@ -42,8 +42,6 @@ def getCheckedState(file):
         return Qt.CheckState.Checked
 def updateFileState(file, state):
     full_path = os.path.join(cwd, file)
-    print(file)
-    print(state)
     if state == 2:
         new_file = file.replace("INACTIVE_", "")
         os.rename(file, new_file)
