@@ -10,7 +10,7 @@ def getDisplayName(file):
         return "Winter Mod - Clean Roads"
     elif "wheel" in file:
         return "Winter Mod - Frosty Wheels"
-    elif "frosty_ats_" in file:
+    elif "frosty_ats_" in file or "frosty_v9_7.scs" in file:
         return "Winter Mod"
     else:
         display_name = file.replace("INACTIVE_", "")
@@ -29,10 +29,11 @@ def getCurrentFile(file):
         for file in os.listdir(cwd):
             if "wheel" in file:
                 return file
-    if "frosty_ats_" in file:
+    if "frosty_ats_" in file or "frosty_v9_7.scs" in file:
         for file in os.listdir(cwd):
-            if "frosty_ats_" in file:
+            if "frosty_ats_" in file or "frosty_v9_7.scs" in file:
                 return file
+        
             
 def enableAll(vault_of_checkboxes):
     for checkbox in vault_of_checkboxes:
@@ -57,7 +58,7 @@ def getCheckedState(file):
         return Qt.CheckState.Checked
 def updateFileState(file, state, vault_of_checkboxes):
     if state == 2:
-        if "frosty_ats_v" in file:
+        if "frosty_ats_v" in file or "frosty_v9_7.scs" in file:
             for index, checkbox in enumerate(vault_of_checkboxes):
                 if index > 0:
                     checkbox.setEnabled(True)
@@ -65,7 +66,7 @@ def updateFileState(file, state, vault_of_checkboxes):
         os.rename(file, new_file)
         file = new_file
     if state == 0:
-        if "frosty_ats_v" in file:
+        if "frosty_ats_v" in file or "frosty_v9_7.scs" in file:
             disableAll(vault_of_checkboxes)
             for index, checkbox in enumerate(vault_of_checkboxes):
                 if index > 0: #this is really janky and assumes that the main file is the first one in the list
