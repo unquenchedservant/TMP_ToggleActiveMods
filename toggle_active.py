@@ -3,6 +3,10 @@ import sys
 from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QLabel, QVBoxLayout, QHBoxLayout, QPushButton
 from PyQt6.QtCore import Qt
 cwd = os.getcwd()
+def getMainFileIndex():
+    for index, file in enumerate(os.listdir(cwd)):
+        if file == "frosty_ats_v5.scs" or file == "frosty_v9_7.scs":
+            return index
 def getDisplayName(file):
     if "physics" in file:
         return "Winter Mod - Physics"
@@ -57,10 +61,11 @@ def getCheckedState(file):
     else:
         return Qt.CheckState.Checked
 def updateFileState(file, state, vault_of_checkboxes):
+    main_index = getMainFileIndex()
     if state == 2:
         if "frosty_ats_v" in file or "frosty_v9_7.scs" in file:
             for index, checkbox in enumerate(vault_of_checkboxes):
-                if index > 0:
+                if not index == main_index:
                     checkbox.setEnabled(True)
         new_file = file.replace("INACTIVE_", "")
         os.rename(file, new_file)
@@ -69,7 +74,7 @@ def updateFileState(file, state, vault_of_checkboxes):
         if "frosty_ats_v" in file or "frosty_v9_7.scs" in file:
             disableAll(vault_of_checkboxes)
             for index, checkbox in enumerate(vault_of_checkboxes):
-                if index > 0: #this is really janky and assumes that the main file is the first one in the list
+                if not index == main_index: #this is really janky and assumes that the main file is the first one in the list
                     checkbox.setEnabled(False)
         else:
             new_file = "INACTIVE_" + file
